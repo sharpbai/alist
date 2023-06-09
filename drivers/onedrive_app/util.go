@@ -180,10 +180,17 @@ func (d *OnedriveAPP) upBig(ctx context.Context, dstDir model.Obj, stream model.
 			return err
 		}
 		req = req.WithContext(ctx)
+		req.Header.Set("Pragma", "no-cache")
+		req.Header.Set("Cache-Control", "no-cache")
+		req.Header.Set("Application", "ODB Web")
+		req.Header.Set("Scenario", "UploadFile")
+		req.Header.Set("Scenariotype", "AUO")
+		req.Header.Set("Referer", "https://v5tvn-my.sharepoint.com/personal/sharpbai_v5tvn_onmicrosoft_com/_layouts/15/onedrive.aspx")
+		req.Header.Set("Origin", "https://v5tvn-my.sharepoint.com")
 		req.Header.Set("Content-Length", strconv.Itoa(int(byteSize)))
 		req.Header.Set("Content-Range", fmt.Sprintf("bytes %d-%d/%d", finish, finish+byteSize-1, stream.GetSize()))
 		finish += byteSize
-		res, err := base.HttpClient.Do(req)
+		res, err := base.Http2Client.Do(req)
 		if err != nil {
 			return err
 		}
